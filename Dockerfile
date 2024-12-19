@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:trixie
 
 # Install git, supervisor, VNC, & X11 packages
 RUN set -ex; \
@@ -12,7 +12,9 @@ RUN set -ex; \
       supervisor \
       x11vnc \
       xterm \
-      xvfb
+      xvfb \
+      ngspice \
+      xschem
 
 # Setup demo environment variables
 ENV HOME=/root \
@@ -21,8 +23,8 @@ ENV HOME=/root \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=C.UTF-8 \
     DISPLAY=:0.0 \
-    DISPLAY_WIDTH=1024 \
-    DISPLAY_HEIGHT=768 \
+    DISPLAY_WIDTH=1920 \
+    DISPLAY_HEIGHT=1080 \
     RUN_XTERM=yes \
     RUN_FLUXBOX=yes
 COPY . /app
