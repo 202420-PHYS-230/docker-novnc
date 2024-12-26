@@ -34,7 +34,6 @@ RUN set -ex; \
       x11vnc \
       xterm \
       xvfb \
-      ngspice \
       emacs-nox
 
 RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
@@ -74,9 +73,7 @@ ARG PATH="/root/miniconda3/bin:${PATH}"
 
 # Install wget to fetch Miniconda
 RUN apt-get update && \
-    apt-get install -y wget && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y wget;
 
 # Install Miniconda on x86 or ARM platforms
 RUN arch=$(uname -m) && \
@@ -94,6 +91,10 @@ RUN arch=$(uname -m) && \
     rm -f miniconda.sh
 
 RUN conda install -y -n base ipykernel --update-deps --force-reinstall
+
+COPY sources.list /etc/apt/sources.list
+
+RUN apt update && apt install -y kicad/bookworm-backports kicad-libraries/bookworm-backports ngspice/bookworm-backports
 
 ENV HOME=/home/vscode \
     DEBIAN_FRONTEND=noninteractive \
