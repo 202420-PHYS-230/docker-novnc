@@ -36,15 +36,15 @@ RUN set -ex; \
       xvfb \
       emacs-nox
 
-RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
-    tar -xzvf xschem-latest.tar.gz; \
-    cd xschem-3.4.6; \
-    apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
-    ./configure; \
-    make; \
-    make install
+# RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
+#    tar -xzvf xschem-latest.tar.gz; \
+#    cd xschem-3.4.6; \
+#    apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
+#    ./configure; \
+#    make; \
+#    make install
 
-RUN rm -r xschem-latest.tar.gz xschem-3.4.6
+# RUN rm -r xschem-latest.tar.gz xschem-3.4.6
 
 #
 # trouble building ngspice on amd64
@@ -109,6 +109,15 @@ ENV HOME=/home/vscode \
     RUN_FLUXBOX=yes
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN conda init bash
+
+RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy
+
+RUN echo "source activate phenv" >> ~/.bashrc
+
+#ENV PATH /opt/conda/envs/{env}/bin:$PATH
+#RUN conda activate phenv
 
 COPY . /app
 #CMD ["/app/entrypoint.sh"]
