@@ -36,38 +36,6 @@ RUN set -ex; \
       xvfb \
       emacs-nox
 
-# RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
-#    tar -xzvf xschem-latest.tar.gz; \
-#    cd xschem-3.4.6; \
-#    apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
-#    ./configure; \
-#    make; \
-#    make install
-
-# RUN rm -r xschem-latest.tar.gz xschem-3.4.6
-
-#
-# trouble building ngspice on amd64
-#
-# RUN apt-get update && apt-get -y install bc bison flex libxaw7 libxaw7-dev libx11-6 libx11-dev libreadline8 libxmu6
-# RUN apt-get update && apt-get -y install build-essential libtool gperf libxml2 libxml2-dev libxml-libxml-perl libgd-perl
-# RUN apt-get update && apt-get -y install g++ gfortran make cmake libfl-dev libfftw3-dev libreadline-dev
-# 
-# RUN wget https://sourceforge.net/projects/ngspice/files/ng-spice-rework/43/ngspice-43.tar.gz/download -O ngspice-43.tar.gz; \
-#     tar -xzvf ngspice-43.tar.gz;
-# 
-# RUN cd ngspice-43; \
-#     if [ "$TARGETPLATFORM" == "linux/amd64" ]; then \
-#         ./configure --disable-dependency-tracking; \
-#     else \
-#        ./configure; \
-#     fi; \
-#     make; \
-#     make install
-#
-# RUN rm -rf ngspice-43.tar.gz ngspice-43
-#
-
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 
@@ -112,13 +80,25 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN conda init bash
 
-RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy
+RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy ipykernel
 
 RUN echo "source activate phenv" >> ~/.bashrc
 
-#ENV PATH /opt/conda/envs/{env}/bin:$PATH
-#RUN conda activate phenv
+RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
+   tar -xzvf xschem-latest.tar.gz; \
+   cd xschem-3.4.6; \
+   apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
+   ./configure; \
+   make; \
+   make install
+
+RUN rm -r xschem-latest.tar.gz xschem-3.4.6
+
+RUN apt install -y vim-gtk3
 
 COPY . /app
-#CMD ["/app/entrypoint.sh"]
+
+# RUN conda install -y -n phenv ipykernel --update-deps --force-reinstall
+
+# CMD ["/app/entrypoint.sh"]
 EXPOSE 8080
