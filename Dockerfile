@@ -82,8 +82,6 @@ RUN conda init bash
 
 RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy ipykernel
 
-RUN echo "source activate phenv" >> ~/.bashrc
-
 RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
    tar -xzvf xschem-latest.tar.gz; \
    cd xschem-3.4.6; \
@@ -96,9 +94,26 @@ RUN rm -r xschem-latest.tar.gz xschem-3.4.6
 
 RUN apt install -y vim-gtk3
 
+# RUN arch=$(uname -m) && \
+#     if [ "$arch" = "x86_64" ]; then \
+#     QUARTO_URL="https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.40/quarto-1.6.40-linux-amd64.deb"; \
+#     elif [ "$arch" = "aarch64" ]; then \
+#     QUARTO_URL="https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.40/quarto-1.6.40-linux-arm64.deb "; \
+#     else \
+#     echo "Unsupported architecture: $arch"; \
+#     exit 1; \
+#     fi && \
+#     wget $QUARTO_URL -O quarto.deb && \
+#     dpkg -i quarto.deb && \
+#     rm -f quarto.deb
+
+RUN conda run -n phenv pip install --root-user-action=ignore quarto quarto-cli
+    
 COPY . /app
 
-# RUN conda install -y -n phenv ipykernel --update-deps --force-reinstall
+RUN echo "source activate phenv\nexport QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python" >> ~/.bashrc
+
+run sed -z "s,import sys,import sys\nimport os\nos.environ['QUARTO_PYTHON'] = '/root/miniconda3/envs/phenv/bin/python'," -i /root/miniconda3/envs/phenv/bin/quarto 
 
 # CMD ["/app/entrypoint.sh"]
 EXPOSE 8080
