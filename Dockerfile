@@ -113,7 +113,11 @@ COPY . /app
 
 RUN echo "source activate phenv\nexport QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python" >> ~/.bashrc
 
-run sed -z "s,import sys,import sys\nimport os\nos.environ['QUARTO_PYTHON'] = '/root/miniconda3/envs/phenv/bin/python'," -i /root/miniconda3/envs/phenv/bin/quarto 
+# RUN sed -z "s,import sys,import sys\nimport os\nos.environ['QUARTO_PYTHON'] = '/root/miniconda3/envs/phenv/bin/python'," -i /root/miniconda3/envs/phenv/bin/quarto
+
+ENV QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python
+
+RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
 
 # CMD ["/app/entrypoint.sh"]
 EXPOSE 8080
