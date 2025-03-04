@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 #
-# docker buildx build --push --platform linux/arm64,linux/amd64 --tag us.gcr.io/gcpdrive-sjstest/novnc:1 .
+# docker buildx build --push --platform linux/arm64,linux/amd64 --tag ghcr.io/202420-PHYS-230/novnc:1 .
 #
 #ARG USERNAME=user
 #ARG USER_UID=1000
