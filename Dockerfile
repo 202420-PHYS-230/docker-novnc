@@ -82,15 +82,15 @@ RUN conda init bash
 
 RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy ipykernel
 
-RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
-   tar -xzvf xschem-latest.tar.gz; \
-   cd xschem-3.4.6; \
-   apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
-   ./configure; \
-   make; \
-   make install
-
-RUN rm -r xschem-latest.tar.gz xschem-3.4.6
+# RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
+#    tar -xzvf xschem-latest.tar.gz; \
+#    apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
+#    cd xschem-3.4.6; \
+#    ./configure; \
+#    make; \
+#    make install
+# 
+# RUN rm -r xschem-latest.tar.gz xschem-3.4.6
 
 RUN apt install -y vim-gtk3
 
@@ -117,7 +117,7 @@ RUN echo "source activate phenv\nexport QUARTO_PYTHON=/root/miniconda3/envs/phen
 
 ENV QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python
 
-RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
+# RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
 
 # CMD ["/app/entrypoint.sh"]
 EXPOSE 8080
