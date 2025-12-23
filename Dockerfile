@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 #
-# docker buildx build --push --platform linux/arm64,linux/amd64 --tag ghcr.io/202420-PHYS-230/novnc:1 .
+# docker buildx build --push --platform linux/arm64,linux/amd64 --tag ghcr.io/202420-phys-230/novnc:4 .
 #
 #ARG USERNAME=user
 #ARG USER_UID=1000
@@ -57,6 +57,9 @@ RUN arch=$(uname -m) && \
     mkdir -p /root/.conda && \
     bash miniconda.sh -b -p /root/miniconda3 && \
     rm -f miniconda.sh
+
+
+ENV CONDA_PLUGINS_AUTO_ACCEPT_TOS=true
 
 RUN conda install -y -n base ipykernel --update-deps --force-reinstall
 
@@ -116,6 +119,8 @@ RUN echo "source activate phenv\nexport QUARTO_PYTHON=/root/miniconda3/envs/phen
 # RUN sed -z "s,import sys,import sys\nimport os\nos.environ['QUARTO_PYTHON'] = '/root/miniconda3/envs/phenv/bin/python'," -i /root/miniconda3/envs/phenv/bin/quarto
 
 ENV QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python
+
+RUN rm -rf /var/lib/apt/lists/*
 
 # RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
 
