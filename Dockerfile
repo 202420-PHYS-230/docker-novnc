@@ -3,30 +3,14 @@ FROM mcr.microsoft.com/devcontainers/base:bookworm
 #
 # docker buildx build --push --platform linux/arm64,linux/amd64 --tag ghcr.io/202420-phys-230/novnc:4 .
 #
-#ARG USERNAME=user
-#ARG USER_UID=1000
-#ARG USER_GID=$USER_UID
-#
-# Create the user
-# RUN groupadd --gid $USER_GID $USERNAME \
-#     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-#     #
-#     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-#     && apt-get update \
-#     && apt-get install -y sudo \
-#     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-#     && chmod 0440 /etc/sudoers.d/$USERNAME
-#
-# ********************************************************
-# * Anything else you want to do like clean up goes here *
-# ********************************************************
-
 # Install git, supervisor, VNC, & X11 packages
+
 RUN set -ex; \
     apt-get update; \
     apt-get install -y \
       bash \
       fluxbox \
+      gh \
       git \
       net-tools \
       novnc \
@@ -85,6 +69,9 @@ RUN conda init bash
 
 RUN conda create -y -n phenv python=3.12 numpy scipy matplotlib pandas sympy ipykernel
 
+#
+# Don't really need xschem any more with KiCad
+#
 # RUN wget https://sourceforge.net/projects/xschem/files/latest/download -O xschem-latest.tar.gz; \
 #    tar -xzvf xschem-latest.tar.gz; \
 #    apt install -y bison debhelper flex libcairo2-dev libx11-xcb-dev libxpm-dev libxrender-dev mawk tcl-dev tk-dev; \
@@ -109,6 +96,9 @@ RUN apt install -y vim-gtk3
 #     wget $QUARTO_URL -O quarto.deb && \
 #     dpkg -i quarto.deb && \
 #     rm -f quarto.deb
+#
+# Just pip install quarto stuff
+#
 
 RUN conda run -n phenv pip install --root-user-action=ignore quarto quarto-cli
     
@@ -122,7 +112,7 @@ ENV QUARTO_PYTHON=/root/miniconda3/envs/phenv/bin/python
 
 RUN rm -rf /var/lib/apt/lists/*
 
-# RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
+# set up port to forward 8080
 
-# CMD ["/app/entrypoint.sh"]
 EXPOSE 8080
+
